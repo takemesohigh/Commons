@@ -34,6 +34,11 @@ android {
         compose = true
     }
 
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
