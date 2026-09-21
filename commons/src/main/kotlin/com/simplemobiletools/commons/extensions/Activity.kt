@@ -104,6 +104,8 @@ fun Activity.showDonateOrUpgradeDialog() {
 
 fun Activity.isAppInstalledOnSDCard(): Boolean = try {
     val applicationInfo = packageManager.getPackageInfo(packageName, 0).applicationInfo
+        ?: return false
+
     (applicationInfo.flags and ApplicationInfo.FLAG_EXTERNAL_STORAGE) == ApplicationInfo.FLAG_EXTERNAL_STORAGE
 } catch (e: Exception) {
     false

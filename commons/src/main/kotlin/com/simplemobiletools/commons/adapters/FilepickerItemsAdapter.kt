@@ -99,19 +99,24 @@ class FilepickerItemsAdapter(
                     .centerCrop()
                     .error(placeholder)
 
-                var itemToLoad = if (fileDirItem.name.endsWith(".apk", true)) {
-                    val packageInfo = root.context.packageManager.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES)
-                    if (packageInfo != null) {
-                        val appInfo = packageInfo.applicationInfo
-                        appInfo.sourceDir = path
-                        appInfo.publicSourceDir = path
-                        appInfo.loadIcon(root.context.packageManager)
-                    } else {
-                        path
-                    }
-                } else {
-                    path
-                }
+				var itemToLoad = if (fileDirItem.name.endsWith(".apk", true)) {
+					val packageInfo = root.context.packageManager.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES)
+
+				if (packageInfo != null) {
+					val appInfo = packageInfo.applicationInfo
+				if (appInfo != null) {
+					appInfo.sourceDir = path
+					appInfo.publicSourceDir = path
+					appInfo.loadIcon(root.context.packageManager)
+				} else {
+					path
+				}
+			} else {
+				path
+			}
+		} else {
+			path
+		}
 
                 if (!activity.isDestroyed && !activity.isFinishing) {
                     if (activity.isRestrictedSAFOnlyRoot(path)) {
