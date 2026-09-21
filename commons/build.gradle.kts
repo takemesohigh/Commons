@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.parcelize)
+    alias(libs.plugins.compose.compiler)
     `maven-publish`
 }
 
@@ -13,7 +14,9 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.app.build.minimumSDK.get().toInt()
+
         vectorDrawables.useSupportLibrary = true
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
@@ -22,10 +25,12 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
             consumerProguardFiles("proguard-rules.pro")
         }
     }
@@ -40,10 +45,6 @@ android {
         checkReleaseBuilds = false
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
-    }
-
     compileOptions {
         val currentJavaVersionFromLibs =
             JavaVersion.valueOf(
@@ -52,6 +53,10 @@ android {
 
         sourceCompatibility = currentJavaVersionFromLibs
         targetCompatibility = currentJavaVersionFromLibs
+    }
+
+    publishing {
+        singleVariant("release")
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -86,14 +91,13 @@ publishing.publications {
         artifactId = name
         version = libs.versions.app.version.versionName.get()
 
-        afterEvaluate {
-            from(components["release"])
-        }
+        from(components["release"])
     }
 }
 
 dependencies {
     implementation(libs.kotlinx.serialization.json)
+
     api(libs.kotlin.immutable.collections)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.documentfile)
