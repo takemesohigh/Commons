@@ -85,13 +85,15 @@ android {
     namespace = libs.versions.app.version.groupId.get()
 }
 
-publishing.publications {
-    create<MavenPublication>("release") {
-        groupId = libs.versions.app.version.groupId.get()
-        artifactId = name
-        version = libs.versions.app.version.versionName.get()
+afterEvaluate {
+    publishing.publications {
+        create<MavenPublication>("release") {
+            groupId = libs.versions.app.version.groupId.get()
+            artifactId = name
+            version = libs.versions.app.version.versionName.get()
 
-        from(components["release"])
+            from(components["release"])
+        }
     }
 }
 
