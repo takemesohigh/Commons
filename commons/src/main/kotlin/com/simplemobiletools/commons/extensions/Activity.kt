@@ -1163,13 +1163,29 @@ private fun BaseSimpleActivity.renameCasually(
 
 fun Activity.createTempFile(file: File): File? {
     return if (file.isDirectory) {
-        createTempDir("temp", "${System.currentTimeMillis()}", file.parentFile)
+        val tempDir = java.io.File(
+            file.parentFile,
+            "temp${System.currentTimeMillis()}"
+        )
+
+        if (tempDir.mkdir()) {
+            tempDir
+        } else {
+            null
+        }
     } else {
         if (isRPlus()) {
-            // this can throw FileSystemException, lets catch and handle it at the place calling this function
-            kotlin.io.path.createTempFile(file.parentFile.toPath(), "temp", "${System.currentTimeMillis()}").toFile()
+            kotlin.io.path.createTempFile(
+                file.parentFile.toPath(),
+                "temp",
+                "${System.currentTimeMillis()}"
+            ).toFile()
         } else {
-            createTempFile("temp", "${System.currentTimeMillis()}", file.parentFile)
+            java.io.File.createTempFile(
+                "temp",
+                "${System.currentTimeMillis()}",
+                file.parentFile
+            )
         }
     }
 }
