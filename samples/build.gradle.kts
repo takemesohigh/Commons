@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android)
-    alias(libs.plugins.kotlinAndroid)
 }
 android {
     compileSdk = libs.versions.app.build.compileSDKVersion.get().toInt()
