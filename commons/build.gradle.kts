@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.library)
     alias(libs.plugins.ksp)
@@ -43,26 +45,38 @@ android {
     }
 
     compileOptions {
-        val currentJavaVersionFromLibs = JavaVersion.valueOf(libs.versions.app.build.javaVersion.get().toString())
+        val currentJavaVersionFromLibs =
+            JavaVersion.valueOf(
+                libs.versions.app.build.javaVersion.get().toString()
+            )
+
         sourceCompatibility = currentJavaVersionFromLibs
         targetCompatibility = currentJavaVersionFromLibs
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = project.libs.versions.app.build.kotlinJVMTarget.get()
-        kotlinOptions.freeCompilerArgs = listOf(
-            "-opt-in=kotlin.RequiresOptIn",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi",
-            "-Xcontext-receivers"
-        )
+        compilerOptions {
+            jvmTarget.set(
+                JvmTarget.fromTarget(
+                    project.libs.versions.app.build.kotlinJVMTarget.get()
+                )
+            )
+
+            freeCompilerArgs.addAll(
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-opt-in=com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi",
+                "-Xcontext-receivers"
+            )
+        }
     }
 
     sourceSets {
         getByName("main").java.srcDirs("src/main/kotlin")
     }
+
     namespace = libs.versions.app.version.groupId.get()
 }
 
@@ -71,6 +85,7 @@ publishing.publications {
         groupId = libs.versions.app.version.groupId.get()
         artifactId = name
         version = libs.versions.app.version.versionName.get()
+
         afterEvaluate {
             from(components["release"])
         }
@@ -86,7 +101,6 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.androidx.biometric.ktx)
     implementation(libs.ez.vcard)
-
 
     implementation(libs.bundles.lifecycle)
     implementation(libs.bundles.compose)
