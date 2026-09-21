@@ -273,7 +273,7 @@ fun String.trimToComparableNumber(): String {
 }
 
 // get the contact names first letter at showing the placeholder without image
-fun String.getNameLetter() = normalizeString().toCharArray().getOrNull(0)?.toString()?.uppercase(locale.getDefault()) ?: "A"
+fun String.getNameLetter() = normalizeString().toCharArray().getOrNull(0)?.toString()?.uppercase(Locale.getDefault()) ?: "A"
 
 fun String.normalizePhoneNumber() = PhoneNumberUtils.normalizeNumber(this)
 
