@@ -116,7 +116,9 @@ dependencies {
     api(libs.recyclerView.fastScroller)
     api(libs.reprint)
     api(libs.rtl.viewpager)
-    api(libs.patternLockView)
+    api(libs.patternLockView) {
+		exclude(group = "com.android.support")
+}
     api(libs.androidx.core.ktx)
     api(libs.androidx.appcompat)
     api(libs.material)
